@@ -17,11 +17,11 @@ const createEnv = () => {
   if (!parsedEnv.success) {
     throw new Error(
       `Invalid env provided.
-  The following variables are missing or invalid:
-  ${Object.entries(z.treeifyError(parsedEnv.error))
-    .map(([k, v]) => `- ${k}: ${v}`)
-    .join('\n')}
-  `,
+      The following variables are missing or invalid:
+      ${Object.entries(z.treeifyError(parsedEnv.error))
+        .map(([k, v]) => `- ${k}: ${v}`)
+        .join('\n')}
+      `,
     );
   }
 

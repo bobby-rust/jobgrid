@@ -1,5 +1,5 @@
 import { env } from '@/config/env';
-import { useNotifications } from '@/app/components/notifications';
+import { useNotifications } from '@/app/components/ui/notifications';
 
 type RequestOptions = {
   method?: string;

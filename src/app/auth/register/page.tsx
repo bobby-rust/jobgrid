@@ -24,6 +24,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { useRouter } from "next/router";
 
 const registerFormSchema = z.object({
     email: z.email().min(2, {
@@ -42,6 +43,7 @@ const registerFormSchema = z.object({
 type Props = {}
 
 export default function Register({ }: Props) {
+    // const router = useRouter();
 
     const form = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -56,55 +58,51 @@ export default function Register({ }: Props) {
     }
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="flex flex-col max-w-3xl justify-center items-center">
-                <div>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Register</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                                    <FormField
-                                        control={form.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Email</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Email" {...field} />
-                                                </FormControl>
-                                                <FormDescription>
-                                                    This is the email address that will be associated with your account
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="password"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Password</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Password" {...field} />
-                                                </FormControl>
-                                                <FormDescription>
-                                                    This is the password you will use to login.
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <Button type="submit">Submit</Button>
-                                </form>
-                            </Form>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
+        <div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Register</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Email" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            This is the email address that will be associated with your account
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Password" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            This is the password you will use to login.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit">Register</Button>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
         </div>
     )
 }
