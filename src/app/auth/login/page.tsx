@@ -12,15 +12,17 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/components/ui/input";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { useRegister } from "@/lib/auth";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useState } from "react";
+import { useLogin } from "@/lib/auth";
 import { paths } from "@/config/paths";
 
-const registerFormSchema = z.object({
+const loginFormSchema = z.object({
     email: z.email().min(2, {
         error: "Email must be at least 2 characters"
     }).max(50, {
@@ -36,23 +38,26 @@ const registerFormSchema = z.object({
 
 type Props = {}
 
-export default function Register({ }: Props) {
+export default function Login({ }: Props) {
     const router = useRouter();
-    const register = useRegister({
-        onSuccess: () => router.replace(decodeURIComponent(paths.auth.login.getHref()))
-    });
+    const login = useLogin({
+        onSuccess: () => {
+            router.replace(paths.home.getHref())
+        }
+    })
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const form = useForm<z.infer<typeof registerFormSchema>>({
-        resolver: zodResolver(registerFormSchema),
+    const form = useForm<z.infer<typeof loginFormSchema>>({
+        resolver: zodResolver(loginFormSchema),
         defaultValues: {
             email: "",
             password: ""
         }
     })
 
-    function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    function onSubmit(values: z.infer<typeof loginFormSchema>) {
         console.log(values);
-        register.mutate(values);
+        login.mutate(values);
     }
 
     return (
@@ -65,7 +70,7 @@ export default function Register({ }: Props) {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Email" {...field} />
+                                <Input startIcon={Mail} endIcon={null} placeholder="Email" type="email" {...field} />
                             </FormControl>
                         </FormItem>
                     )}
@@ -77,17 +82,17 @@ export default function Register({ }: Props) {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Password" {...field} />
+                                <Input startIcon={Lock} endIcon={showPassword ? Eye : EyeOff} endIconOnClick={() => setShowPassword(!showPassword)} placeholder="Password" type={`${showPassword ? "text" : "password"}`} {...field} />
                             </FormControl>
                         </FormItem>
                     )}
                 />
 
                 <div className="flex flex-col text-center gap-3">
-                    <Button variant="default" type="submit">Register</Button>
+                    <Button variant="default" type="submit">Login</Button>
                     <span className="text-sm text-muted-foreground">
-                        Already have an account?{" "}
-                        <Link href="/auth/login" className="text-foreground hover:underline">Sign in</Link>
+                        Don't have an account?{" "}
+                        <Link href="/auth/register" className="text-foreground hover:underline">Sign up</Link>
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
