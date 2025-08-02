@@ -12,13 +12,15 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/components/ui/input";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { useRegister } from "@/lib/auth";
 import { paths } from "@/config/paths";
+import { useState } from "react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 
 const registerFormSchema = z.object({
     email: z.email().min(2, {
@@ -38,6 +40,7 @@ type Props = {}
 
 export default function Register({ }: Props) {
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const register = useRegister({
         onSuccess: () => router.replace(decodeURIComponent(paths.auth.login.getHref()))
     });
@@ -65,7 +68,8 @@ export default function Register({ }: Props) {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Email" {...field} />
+
+                                <Input startIcon={Mail} endIcon={null} placeholder="Email" type="email" {...field} />
                             </FormControl>
                         </FormItem>
                     )}
@@ -77,7 +81,7 @@ export default function Register({ }: Props) {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Password" {...field} />
+                                <Input startIcon={Lock} endIcon={showPassword ? Eye : EyeOff} endIconOnClick={() => setShowPassword(!showPassword)} placeholder="Password" type={`${showPassword ? "text" : "password"}`} {...field} />
                             </FormControl>
                         </FormItem>
                     )}

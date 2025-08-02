@@ -34,9 +34,9 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
             }
         >
             <ErrorBoundary fallback={<div>Something went wrong!</div>}>
-                <div className="flex flex-col justify-center items-center min-h-screen gap-16">
+                <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full">
                     <h1 className="text-center text-6xl font-extrabold tracking-tight text-balance">
-                        Welcome to JobGrid
+                        Welcome to Griddle.
                     </h1>
                     <Card className="w-full max-w-sm">
                         <CardHeader>
