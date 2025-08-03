@@ -1,29 +1,11 @@
-"use client";
-
-import { ReactNode, Suspense, useEffect } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { Spinner } from '@/app/components/ui/spinner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePathname } from 'next/navigation';
-import { paths } from '@/config/paths';
-import { useUser } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
 
-const AuthLayout = ({ children }: { children: ReactNode }) => {
-    const router = useRouter();
-    const user = useUser();
-    const pathname = usePathname();
-    const isLoginPage = pathname === paths.auth.login.getHref();
-    const title = isLoginPage
-        ? 'Log in to your account'
-        : 'Register your account';
-
-    useEffect(() => {
-        if (user.data) {
-            router.replace(decodeURIComponent(paths.home.getHref()))
-        }
-    }, [user.data, router])
+const NewJobLayout = ({ children }: { children: ReactNode }) => {
+    const title = "Track New Application"
 
     return (
         <Suspense
@@ -35,14 +17,10 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
         >
             <ErrorBoundary fallback={<div>Something went wrong!</div>}>
                 <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full">
-                    <h1 className="text-center text-6xl font-extrabold tracking-tight text-balance">
-                        Welcome to Griddle
-                    </h1>
                     <Card className="w-full max-w-sm">
                         <CardHeader>
                             <CardTitle>{title}</CardTitle>
                         </CardHeader>
-
                         <CardContent>
                             {children}
                         </CardContent>
@@ -53,4 +31,4 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     );
 };
 
-export default AuthLayout;
+export default NewJobLayout;

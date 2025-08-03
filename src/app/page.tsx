@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
-import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { CirclePlus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -12,6 +13,7 @@ export default function Home() {
   const user = useUser();
 
   useEffect(() => {
+    console.log("User: ", user);
     if (!user.data) {
       router.replace(decodeURIComponent(paths.auth.login.getHref()));
     }
@@ -24,7 +26,9 @@ export default function Home() {
         <div>
           <h2 className="text-3xl font-semibold">No jobs yet</h2>
         </div>
-        <Button size="lg"><Plus /> Add Job</Button>
+        <Button size="xl" onClick={() => { router.replace(decodeURIComponent(paths.home.new.getHref())) }}>
+          <CirclePlus className="size-6" /> Track New Application
+        </Button>
       </div>
     </div>
   );

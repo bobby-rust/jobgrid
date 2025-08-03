@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 
 export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
-    startIcon: any;
-    endIcon: any;
+    startIcon?: any;
+    endIcon?: any;
     endIconOnClick?: () => void;
     startIconOnClick?: () => void;
 }

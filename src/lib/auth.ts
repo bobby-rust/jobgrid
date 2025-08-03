@@ -4,8 +4,16 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/r
 import { z } from "zod";
 
 export const getUser = async () => {
+  try {
     const response = (await api.get("/auth/me")) as { data: User };
+    console.log("User fetched:", response);
     return response.data;
+  } catch (error: any) {
+    const refresh = (await api.post("/auth/refresh"));
+    console.log("Refresh attempt: ", refresh); 
+    return null;
+  }
+    
 }
 
 const userQueryKey = ['user'];

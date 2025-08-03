@@ -32,15 +32,23 @@ import {
 } from "@/components/ui/sidebar"
 import React from "react"
 import { Badge } from "@/components/ui/badge"
-import { useUser } from "@/lib/auth"
+import { useLogout, useUser } from "@/lib/auth"
+import { useRouter } from "next/navigation"
+import { paths } from "@/config/paths"
 
 export function SidebarUser() {
     const { isMobile } = useSidebar();
+    const router = useRouter();
 
     const user = useUser();
+    const logout = useLogout({
+        onSuccess: () => {
+            console.log("Logged out");
+            router.replace(decodeURIComponent(paths.auth.login.getHref()));
+        }
+    });
 
     if (!user.data) return <></>
-    console.log(user);
 
     return (
         <SidebarMenu className="gap-2">
@@ -100,7 +108,7 @@ export function SidebarUser() {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <span onClick={(() => { })} className="flex items-center gap-2 w-full hover:cursor-pointer">
+                            <span onClick={() => logout.mutate()} className="flex items-center gap-2 w-full hover:cursor-pointer">
                                 <LogOut className="group-hover:text-sidebar-accent-foreground" />
                                 Logout
                             </span>
