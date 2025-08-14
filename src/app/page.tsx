@@ -26,7 +26,7 @@ export default function Home() {
         <div>
           <h2 className="text-3xl font-semibold">No jobs yet</h2>
         </div>
-        <Button size="xl" onClick={() => { router.replace(decodeURIComponent(paths.home.new.getHref())) }}>
+        <Button size="xl" onClick={() => { router.replace(decodeURIComponent(paths.home.applications.new.getHref())) }}>
           <CirclePlus className="size-6" /> Track New Application
         </Button>
       </div>

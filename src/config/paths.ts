@@ -1,9 +1,12 @@
 export const paths = {
   home: {
     getHref: () => '/',
-    new: {
-      getHref: () => "/new"
+    applications: {
+      new: {
+        getHref: () => "/applications/new"
+      }
     }
+    
   },
 
   auth: {

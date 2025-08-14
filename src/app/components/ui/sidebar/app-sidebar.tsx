@@ -21,7 +21,7 @@ import { SidebarUser } from "./sidebar-user";
 const items = [
     {
         title: "Home",
-        url: "#",
+        url: "/",
         icon: Home,
     },
     {
