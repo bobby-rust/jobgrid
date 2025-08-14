@@ -19,6 +19,7 @@ import { StateDropdown } from "@/app/components/ui/state-dropdown";
 import { DatePicker } from "@/app/components/ui/date-picker";
 import { toast } from "sonner";
 import CompensationTypeToggle from "@/app/components/ui/compensation-type-toggle/compensation-type-toggle";
+import { CurrencyDropdown } from "@/app/components/ui/currency-dropdown";
 
 const newApplicationFormSchema = z.object({
     company_name: z.string().min(1, {
@@ -185,6 +186,18 @@ export default function NewApplication({ }: Props) {
                             </FormControl>
                         </FormItem>
                     )} />
+                <FormField
+                    control={form.control}
+                    name="compensation.currency"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Currency</FormLabel>
+                            <FormControl>
+                                <CurrencyDropdown onValueChange={undefined} defaultValue={undefined} />
+                            </FormControl>
+                        </FormItem>
+                    )} />
+
                 <Button variant="default" type="submit" onClick={() => onSubmit(form.getValues())}>Submit</Button>
             </form>
         </Form >
