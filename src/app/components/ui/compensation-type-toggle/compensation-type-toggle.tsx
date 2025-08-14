@@ -1,5 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import clsx from 'clsx';
+import { CalendarDays, Clock } from 'lucide-react';
 import React from 'react'
 import { twMerge } from 'tailwind-merge';
 
@@ -19,13 +20,19 @@ export default function CompensationTypeToggle({ value, onChange, className }: P
                 onChange(value);
             }}
             value={value}
-            className={twMerge(clsx(className))}
+            className={twMerge(clsx("", className))}
         >
-            <ToggleGroupItem value="yearly" aria-label="Yearly compensation">
-                Yearly
+            <ToggleGroupItem className="p-10" value="yearly" aria-label="Yearly compensation">
+                <div className="flex flex-col items-center gap-2">
+                    Yearly
+                    <CalendarDays />
+                </div>
             </ToggleGroupItem>
-            <ToggleGroupItem value="hourly" aria-label="Hourly Compensation">
-                Hourly
+            <ToggleGroupItem className="p-10" value="hourly" aria-label="Hourly Compensation">
+                <div className="flex flex-col items-center gap-2">
+                    Hourly
+                    <Clock />
+                </div>
             </ToggleGroupItem>
         </ToggleGroup>
     )

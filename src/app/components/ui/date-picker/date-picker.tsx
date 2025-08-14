@@ -49,7 +49,7 @@ export function DatePicker({ value, onChange, className }: Props) {
         setMonth(value);
     }, [value]);
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 max-w-sm">
             <div className="relative flex gap-2">
                 <Input
                     id="date"

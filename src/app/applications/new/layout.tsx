@@ -17,7 +17,7 @@ const NewJobLayout = ({ children }: { children: ReactNode }) => {
         >
             <ErrorBoundary fallback={<div>Something went wrong!</div>}>
                 <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full pb-20">
-                    <Card className="w-[90%]">
+                    <Card className="w-[95%]">
                         <CardHeader>
                             <CardTitle className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">{title}</CardTitle>
                         </CardHeader>
