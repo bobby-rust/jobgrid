@@ -1,6 +1,5 @@
 import React from 'react'
 import codes from "currency-codes";
-import { CircleFlag } from "react-circle-flags";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
@@ -20,14 +19,9 @@ export const CurrencyDropdown = ({ onValueChange, defaultValue, className }: Pro
                     <SelectValue placeholder="Country" />
                 </SelectTrigger>
                 <SelectContent side="bottom" avoidCollisions={false}>
-                    {/* {Object.entries(countries).map(([code, country]: [string, ICountry]) => {
-                        return <SelectItem key={code} value={country.name}>
-                            <div className="flex items-center gap-2">
-                                <CircleFlag countryCode={code.toLowerCase()} style={{ width: 20, height: 20 }} />
-                                {country.name}
-                            </div>
-                        </SelectItem>
-                    })} */}
+                    {codes.codes().map((code) => {
+                        return <SelectItem key={code} value={code}>{code}</SelectItem>
+                    })}
                 </SelectContent>
             </Select>
         </div>
