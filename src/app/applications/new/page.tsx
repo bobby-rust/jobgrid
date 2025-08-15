@@ -163,7 +163,6 @@ export default function NewApplication({ }: Props) {
                         </div>
                     </div>
 
-                    {/* Why no show??? */}
                     <Separator orientation="vertical" />
 
                     <div>
