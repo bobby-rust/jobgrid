@@ -13,7 +13,6 @@ export const getUser = async () => {
     console.log("Refresh attempt: ", refresh); 
     return null;
   }
-    
 }
 
 const userQueryKey = ['user'];
@@ -63,7 +62,6 @@ export const useLogout = ({ onSuccess }: { onSuccess?: () => void }) => {
 const logout = (): Promise<void> => {
   return api.post('/auth/logout');
 };
-
 
 export const loginInputSchema = z.object({
   email: z.string().min(1, 'Required').email('Invalid email'),

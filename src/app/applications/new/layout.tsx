@@ -2,7 +2,7 @@ import { ReactNode, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { Spinner } from '@/app/components/ui/spinner';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const NewJobLayout = ({ children }: { children: ReactNode }) => {
     const title = "Track New Application"
@@ -17,9 +17,10 @@ const NewJobLayout = ({ children }: { children: ReactNode }) => {
         >
             <ErrorBoundary fallback={<div>Something went wrong!</div>}>
                 <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full pb-20">
-                    <Card className="w-[95%]">
+                    <Card className="w-[70%]">
                         <CardHeader>
-                            <CardTitle className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">{title}</CardTitle>
+                            <CardTitle>{title}</CardTitle>
+                            <CardDescription>Track your job applications with detailed information about the role and company.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {children}
