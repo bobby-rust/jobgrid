@@ -18,7 +18,7 @@ export const DataSelect = ({ data, icons, placeholder, onValueChange, defaultVal
     }
     return (
         <div>
-            <Select onValueChange={onValueChange} defaultValue={defaultValue}>
+            <Select onValueChange={onValueChange} value={defaultValue}>
                 <SelectTrigger className={twMerge(clsx("w-full", className))}>
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>

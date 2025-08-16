@@ -1,4 +1,5 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { CompensationType } from '@/types/enums';
 import clsx from 'clsx';
 import { CalendarDays, Clock } from 'lucide-react';
 import React from 'react'
@@ -22,13 +23,13 @@ export default function CompensationTypeToggle({ value, onChange, className }: P
             value={value}
             className={twMerge(clsx("", className))}
         >
-            <ToggleGroupItem className="p-10" value="yearly" aria-label="Yearly compensation">
+            <ToggleGroupItem className="p-10" value={CompensationType.YEARLY} aria-label="Yearly compensation">
                 <div className="flex flex-col items-center gap-2">
                     Yearly
                     <CalendarDays />
                 </div>
             </ToggleGroupItem>
-            <ToggleGroupItem className="p-10" value="hourly" aria-label="Hourly Compensation">
+            <ToggleGroupItem className="p-10" value={CompensationType.HOURLY} aria-label="Hourly Compensation">
                 <div className="flex flex-col items-center gap-2">
                     Hourly
                     <Clock />

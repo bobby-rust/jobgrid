@@ -2,6 +2,9 @@
 // ideally, we want to keep these api related types in sync
 // with the backend instead of manually writing them out
 
+import { CurrencyCodeRecord } from "currency-codes";
+import { ApplicationStatus, CompensationType, EmploymentType, WorkArrangement } from "./enums";
+
 export type BaseEntity = {
   id: string;
   createdAt: number;
@@ -26,3 +29,33 @@ export type User = Entity<{
 export type AuthResponse = {
   user: User;
 };
+
+export type Location = {
+  city: string,
+  state: string,
+  country: string
+}
+
+export type Compensation = {
+  currency: string,
+  compensationType: CompensationType,
+  amount: number
+}
+
+export type JobApplication = {
+  userId: number,
+  companyName: string,
+  jobTitle: string,
+  location: Location,
+  employmentType: EmploymentType,
+  workArrangement: WorkArrangement ,
+  compensation: Compensation ,
+  appliedOn: Date,
+  notes: string,
+  referral: boolean,
+  applicationStatus: ApplicationStatus
+}
+
+export type JobApplicationsResponse = {
+  data: JobApplication[]
+}
