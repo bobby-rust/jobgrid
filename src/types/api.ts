@@ -50,7 +50,7 @@ export type JobApplication = {
   employmentType: EmploymentType,
   workArrangement: WorkArrangement ,
   compensation: Compensation ,
-  appliedOn: Date,
+  appliedOn: string,
   notes: string,
   referral: boolean,
   applicationStatus: ApplicationStatus

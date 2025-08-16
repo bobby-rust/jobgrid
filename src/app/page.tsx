@@ -42,7 +42,7 @@ export default function Home() {
             <div>
               {/* Render your jobs here */}
               {jobApplications.data.map((job, i) => (
-                <JobApplicationCard key={i} job={job} />
+                <JobApplicationCard key={i} jobData={job} />
               ))}
             </div>
           ) : (
