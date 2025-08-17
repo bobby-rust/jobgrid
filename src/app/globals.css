@@ -120,3 +120,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.p-error {
+  color: var(--color-red-400);
+  font-size: small;
+  height: 20px;
+}

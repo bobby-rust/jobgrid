@@ -17,7 +17,7 @@ export const CountryDropdown = ({ onValueChange, defaultValue, className }: Prop
         <div>
             <Select onValueChange={onValueChange} defaultValue={defaultValue}>
                 <SelectTrigger className={twMerge(clsx("w-full", className))}>
-                    <SelectValue placeholder="Country" />
+                    <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
                 <SelectContent side="bottom" avoidCollisions={false}>
                     {Object.entries(countries).map(([code, country]: [string, ICountry]) => {

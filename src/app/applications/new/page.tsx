@@ -40,16 +40,16 @@ const newApplicationFormSchema = z.object({
     location: z.object({
         city: z.string().min(1, { error: "City must not be empty" }),
         state: z.string().optional(),
-        country: z.string().min(1, { error: "Country must not be empty" })
+        country: z.string().min(1, { error: "Select a country" })
     }).optional(),
-    employmentType: z.enum(EmploymentType),
-    workArrangement: z.enum(WorkArrangement),
+    employmentType: z.enum(EmploymentType, { error: "Select an employment type" }),
+    workArrangement: z.enum(WorkArrangement, { error: "Select a work arrangement" }),
     compensation: z.object({
-        currency: z.string(),
+        currency: z.string().min(1, { error: "Select a currency" }),
         compensationType: z.enum(CompensationType, {
             error: "Select a compensation type"
         }),
-        amount: z.number().min(0, { error: "Please enter a non-negative compensation amount" })
+        amount: z.number({ error: "Compensation amount is required" }).min(0, { error: "Please enter a non-negative compensation amount" })
     }),
     appliedOn: z.date(),
     notes: z.string().max(200, { error: "Notes cannot be longer than 200 characters" }),
@@ -67,24 +67,24 @@ export default function NewApplication({ }: Props) {
     const form = useForm<z.infer<typeof newApplicationFormSchema>>({
         resolver: zodResolver(newApplicationFormSchema),
         defaultValues: {
-            companyName: "Pied Piper",
-            jobTitle: "Software Engineer",
-            employmentType: EmploymentType.FULL_TIME,
-            workArrangement: WorkArrangement.ON_SITE,
+            companyName: "",
+            jobTitle: "",
+            employmentType: undefined,
+            workArrangement: undefined,
             location: {
-                city: "Silicon Valley",
-                state: "California",
-                country: "United States"
+                city: "",
+                state: "",
+                country: ""
             },
             compensation: {
-                currency: "USD",
-                compensationType: CompensationType.YEARLY,
-                amount: 0
+                currency: "",
+                compensationType: undefined,
+                amount: undefined
             },
             appliedOn: new Date(),
             notes: "",
             referral: false,
-            applicationStatus: ApplicationStatus.APPLIED
+            applicationStatus: undefined
         }
     })
 
@@ -105,7 +105,7 @@ export default function NewApplication({ }: Props) {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-8 w-full">
                 <div className="flex gap-5">
-                    <div className="w-1/2">
+                    <div className="min-w-[40%]">
                         <div className="pb-5">
                             <h3 className="text-lg font-medium">Job Information</h3>
                             <p className="text-sm text-muted-foreground">Basic details about the position</p>
@@ -121,13 +121,11 @@ export default function NewApplication({ }: Props) {
                                             <Input
                                                 startIcon={null}
                                                 endIcon={null}
-                                                placeholder="Company Name"
+                                                placeholder="Enter company name"
                                                 className={`${form.formState.errors.companyName && "border-red-400"}`}
                                                 {...field} />
                                         </FormControl>
-                                        {form.formState.errors.companyName && (
-                                            <p className="text-red-400">{form.formState.errors.companyName.message}</p>
-                                        )}
+                                        <p className="p-error">{form.formState.errors.companyName?.message ?? ""}</p>
                                     </FormItem>
                                 )}
                             />
@@ -141,13 +139,11 @@ export default function NewApplication({ }: Props) {
                                             <Input
                                                 startIcon={null}
                                                 endIcon={null}
-                                                placeholder="Job Title"
+                                                placeholder="Enter job title"
                                                 className={`${form.formState.errors.jobTitle && "border-red-400"}`}
                                                 {...field} />
                                         </FormControl>
-                                        {form.formState.errors.jobTitle && (
-                                            <p className="text-red-400">{form.formState.errors.jobTitle.message}</p>
-                                        )}
+                                        <p className="p-error">{form.formState.errors.jobTitle?.message ?? ""}</p>
                                     </FormItem>
                                 )}
                             />
@@ -156,7 +152,7 @@ export default function NewApplication({ }: Props) {
 
                     <Separator orientation="vertical" />
 
-                    <div className="w-1/2">
+                    <div className="min-w-[40%]">
                         <div className="pb-5">
                             <h3 className="text-lg font-medium">Employment Details</h3>
                             <p className="text-sm text-muted-foreground">Type of employment and work arrangement</p>
@@ -169,8 +165,9 @@ export default function NewApplication({ }: Props) {
                                     <FormItem>
                                         <FormLabel>Employment Type</FormLabel>
                                         <FormControl>
-                                            <DataSelect data={Object.values(EmploymentType) as string[]} placeholder="Employment Type" onValueChange={field.onChange} defaultValue={field.value} />
+                                            <DataSelect className={`${form.formState.errors.workArrangement && "border-red-400"}`} data={Object.values(EmploymentType) as string[]} placeholder="Select employment type" onValueChange={field.onChange} defaultValue={field.value} />
                                         </FormControl>
+                                        <p className="p-error">{form.formState.errors.employmentType?.message ?? ""}</p>
                                     </FormItem>
                                 )} />
                             <FormField
@@ -180,199 +177,209 @@ export default function NewApplication({ }: Props) {
                                     <FormItem>
                                         <FormLabel>Work Arrangement</FormLabel>
                                         <FormControl>
-                                            <DataSelect data={Object.values(WorkArrangement) as string[]} placeholder="Work Arrangement" onValueChange={field.onChange} defaultValue={field.value} />
+                                            <DataSelect className={`${form.formState.errors.workArrangement && "border-red-400"}`} data={Object.values(WorkArrangement) as string[]} placeholder="Select work arrangement" onValueChange={field.onChange} defaultValue={field.value} />
                                         </FormControl>
+                                        <p className="p-error">{form.formState.errors.workArrangement?.message ?? ""}</p>
                                     </FormItem>
                                 )} />
                         </div>
                     </div>
                 </div>
                 <Separator />
+
                 <div className="flex gap-5">
-                    <div className="w-1/2">
-                        <div className="pb-5">
-                            <h3 className="text-lg font-medium">Location</h3>
-                            <p className="text-sm text-muted-foreground">Where is this position located? (Optional)</p>
-                        </div>
-                        <div className="flex gap-5 flex-col lg:flex-row">
+                    <div className="flex flex-col gap-5 min-w-[40%]">
+                        <div className="w-full flex flex-col">
+                            <div className="pb-5">
+                                <h3 className="text-lg font-medium">Location</h3>
+                                <p className="text-sm text-muted-foreground">Where is this position located? (Optional)</p>
+                            </div>
+                            <div className="flex gap-5 flex-col lg:flex-row">
 
-                            {/* City Field */}
-                            <FormField
-                                control={form.control}
-                                name="location.city"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>City</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="City"
-                                                className={`${form.formState.errors.location?.city && "border-red-400"}`}
-                                                {...field} />
-                                        </FormControl>
-                                        {form.formState.errors.location?.city && (
-                                            <p className="text-red-400">{form.formState.errors.location.city.message}</p>
-                                        )}
-                                    </FormItem>
-                                )}
-                            />
-
-                            {country === "United States" &&
-                                /* State Field */
+                                {/* City Field */}
                                 <FormField
                                     control={form.control}
-                                    name="location.state"
+                                    name="location.city"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>State</FormLabel>
+                                            <FormLabel>City</FormLabel>
                                             <FormControl>
-                                                <DataSelect data={STATES} onValueChange={field.onChange} defaultValue={field.value} placeholder="State" />
+                                                <Input
+                                                    placeholder="Enter city name"
+                                                    className={`${form.formState.errors.location?.city && "border-red-400"}`}
+                                                    {...field} />
                                             </FormControl>
-                                            {form.formState.errors.location?.state && (
-                                                <p className="text-red-400">{form.formState.errors.location?.state.message}</p>
-                                            )}
+                                            <p className="p-error">{form.formState.errors.location?.city?.message ?? ""}</p>
                                         </FormItem>
                                     )}
-                                />}
+                                />
+
+                                {country === "United States" &&
+                                    /* State Field */
+                                    <FormField
+                                        control={form.control}
+                                        name="location.state"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>State</FormLabel>
+                                                <FormControl>
+                                                    <DataSelect data={STATES} onValueChange={field.onChange} defaultValue={field.value} placeholder="State" />
+                                                </FormControl>
+                                                <p className="p-error">{form.formState.errors.location?.state?.message ?? ""}</p>
+                                            </FormItem>
+                                        )}
+                                    />}
+
+
+                            </div>
+                            <div className="pt-5">
+                                <FormField
+                                    control={form.control}
+
+                                    name="location.country"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Country</FormLabel>
+                                            <CountryDropdown
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                                className={`${form.formState.errors.location?.country && "border-red-400"}`} />
+                                            <p className="p-error">{form.formState.errors.location?.country?.message ?? ""}</p>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+                        {/* <Separator orientation="vertical" /> */}
+
+                    </div>
+                    <Separator orientation="vertical" />
+                    <div className="min-w-1/2 max-w-1/2 flex flex-col gap-5">
+                        <div>
+                            <h3 className="text-lg font-medium">Application Details</h3>
+                            <p className="text-sm text-muted-foreground">When you applied and additional information</p>
+                        </div>
+                        <div className="flex gap-5">
+                            <FormField
+                                control={form.control}
+                                name="appliedOn"
+                                render={({ field }) => (
+                                    <FormItem className="h-16 flex flex-col">
+                                        <FormLabel>Applied On</FormLabel>
+                                        <FormControl>
+                                            <DatePicker value={field.value} onChange={field.onChange} />
+                                        </FormControl>
+                                        <p className="p-error">{form.formState.errors.appliedOn?.message ?? ""}</p>
+                                    </FormItem>
+                                )} />
+
+
 
                             <FormField
                                 control={form.control}
-                                name="location.country"
+                                name="applicationStatus"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Country</FormLabel>
-                                        <CountryDropdown
-                                            onValueChange={field.onChange}
-                                            defaultValue="United States"
-                                            className={`${form.formState.errors.location?.country && "border-red-400"}`} />
-                                        {form.formState.errors.location?.country && (
-                                            <p className="text-red-400">{form.formState.errors.location?.country.message}</p>
-                                        )}
+                                    <FormItem className="h-16 flex flex-col">
+                                        <FormLabel>Application Status</FormLabel>
+                                        <FormControl>
+                                            <DataSelect className={`${form.formState.errors.applicationStatus && "border-red-400"}`} data={Object.values(ApplicationStatus)} placeholder="Application Status" onValueChange={field.onChange} defaultValue={field.value} />
+                                        </FormControl>
+                                        <p className="p-error">{form.formState.errors.applicationStatus?.message ?? ""}</p>
                                     </FormItem>
                                 )}
-
                             />
+                            <FormField
+                                control={form.control}
+                                name="referral"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Referral</FormLabel>
+                                        <FormControl>
+                                            <Label
+                                                htmlFor="referral"
+                                                className="flex gap-2 items-center h-9 text-nowrap border-1 p-4 rounded-md cursor-pointer dark:bg-input/30 dark:hover:bg-input/50"
+                                            >
+                                                <Checkbox
+                                                    id="referral"
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    onBlur={field.onBlur}
+                                                    name={field.name}
+                                                    ref={field.ref}
+                                                    className="cursor-pointer"
+                                                />
+                                                <span>I got a referral for this position</span>
+                                            </Label>
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="notes"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Additional Notes (optional)</FormLabel>
+                                    <FormControl>
+                                        <Textarea placeholder="Add any additional notes about this application..." {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )} />
                     </div>
-                    <Separator orientation="vertical" />
-                    <div className="w-1/2">
-                        <div className="pb-5">
-                            <h3 className="text-lg font-medium">Compensation</h3>
-                            <p className="text-sm text-muted-foreground">Salary or hourly rate information</p>
-                        </div>
-                        <div className="flex flex-col gap-5">
-                            <div>
-                                <FormField
-                                    control={form.control}
-                                    name="compensation.amount"
-                                    render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                            <FormLabel>Amount</FormLabel>
-                                            <FormControl>
-                                                <Input type="number" placeholder="Amount" className={`w-xs ${form.formState.errors.compensation?.amount && "border-red-400"}`} value={field.value ?? ""} onChange={(e) => field.onChange(Number(e.target.value))} />
-                                            </FormControl>
-                                        </FormItem>
-                                    )} />
-                            </div>
-                            <div className="flex gap-5">
-                                <FormField
-                                    control={form.control}
-                                    name="compensation.currency"
-                                    render={({ field }) => (
-                                        <FormItem className="h-28 flex flex-col">
-                                            <FormLabel>Currency</FormLabel>
-                                            <FormControl>
-                                                <DataSelect data={CURRENCIES} onValueChange={field.onChange} placeholder="Currency" defaultValue={field.value} />
-                                            </FormControl>
-                                        </FormItem>
-                                    )} />
-                                <FormField
-                                    control={form.control}
-                                    name="compensation.compensationType"
-                                    render={({ field }) => (
-                                        <FormItem className="h-28 flex flex-col">
-                                            <FormLabel>Type</FormLabel>
-                                            <FormControl>
-                                                <CompensationTypeToggle className={`${form.formState.errors.compensation?.type && "border-[1px] border-red-400"}`} {...field} />
-                                            </FormControl>
-                                        </FormItem>
-                                    )} />
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <Separator />
-                <div>
-                    <h3 className="text-lg font-medium">Application Details</h3>
-                    <p className="text-sm text-muted-foreground">When you applied and additional information</p>
+                <div className="w-full">
+                    <div className="pb-5">
+                        <h3 className="text-lg font-medium">Compensation</h3>
+                        <p className="text-sm text-muted-foreground">Salary or hourly rate information</p>
+                    </div>
+                    <div className="flex gap-5">
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="compensation.amount"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Amount</FormLabel>
+                                        <FormControl>
+                                            <Input type="number" placeholder="Enter compensation amount" className={`w-xs ${form.formState.errors.compensation?.amount && "border-red-400"}`} value={field.value ?? ""} onChange={(e) => field.onChange(Number(e.target.value))} />
+                                        </FormControl>
+                                        <p className="p-error">{form.formState.errors.compensation?.amount?.message ?? ""}</p>
+                                    </FormItem>
+                                )} />
+                        </div>
+                        <div className="flex gap-5">
+                            <FormField
+                                control={form.control}
+                                name="compensation.currency"
+                                render={({ field }) => (
+                                    <FormItem className="h-28 flex flex-col">
+                                        <FormLabel>Currency</FormLabel>
+                                        <FormControl>
+                                            <DataSelect className={`${form.formState.errors.compensation?.currency && "border-red-400"}`} data={CURRENCIES} onValueChange={field.onChange} placeholder="Select a currency" defaultValue={field.value} />
+                                        </FormControl>
+                                        <p className="p-error">{form.formState.errors.compensation?.currency?.message ?? ""}</p>
+                                    </FormItem>
+                                )} />
+                            <FormField
+                                control={form.control}
+                                name="compensation.compensationType"
+                                render={({ field }) => (
+                                    <FormItem className="h-28 flex flex-col">
+                                        <FormLabel>Type</FormLabel>
+                                        <FormControl>
+                                            <CompensationTypeToggle isError={!!form.formState.errors.compensation?.compensationType} {...field} />
+                                        </FormControl>
+                                        <p className="p-error">{form.formState.errors.compensation?.compensationType?.message ?? ""}</p>
+                                    </FormItem>
+                                )} />
+                        </div>
+                    </div>
                 </div>
-                <div className="flex gap-5">
-                    <FormField
-                        control={form.control}
-                        name="appliedOn"
-                        render={({ field }) => (
-                            <FormItem className="h-16 flex flex-col">
-                                <FormLabel>Applied On</FormLabel>
-                                <FormControl>
-                                    <DatePicker value={field.value} onChange={field.onChange} className={`${form.formState.errors.appliedOn && "border-red-400"}`} />
-                                </FormControl>
-                                {form.formState.errors.appliedOn && (
-                                    <p className="text-red-400">{form.formState.errors.appliedOn.message}</p>
-                                )}
-                            </FormItem>
-                        )} />
-
-
-
-                    <FormField
-                        control={form.control}
-                        name="applicationStatus"
-                        render={({ field }) => (
-                            <FormItem className="h-16 flex flex-col">
-                                <FormLabel>Application Status</FormLabel>
-                                <FormControl>
-                                    <DataSelect data={Object.values(ApplicationStatus)} placeholder="Application Status" onValueChange={field.onChange} defaultValue={field.value} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="referral"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col h-16">
-                                <FormLabel>Referral</FormLabel>
-                                <FormControl>
-                                    <div className="flex gap-2 items-center">
-                                        <Checkbox
-                                            id="referral"
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                            onBlur={field.onBlur}
-                                            name={field.name}
-                                            ref={field.ref}
-                                        />
-                                        <Label htmlFor="referral">
-                                            I got a referral for this position
-                                        </Label>
-                                    </div>
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-
-                <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Additional Notes (optional)</FormLabel>
-                            <FormControl>
-                                <Textarea placeholder="Add any additional notes about this application..." {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )} />
                 <Button variant="default" type="submit">Submit</Button>
             </form >
         </Form >

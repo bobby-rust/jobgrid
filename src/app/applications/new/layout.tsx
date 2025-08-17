@@ -16,11 +16,10 @@ const NewJobLayout = ({ children }: { children: ReactNode }) => {
             }
         >
             <ErrorBoundary fallback={<div>Something went wrong!</div>}>
-                <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full py-10">
+                <div className="flex flex-col justify-center items-center min-h-[90vh] gap-16 w-full pb-10">
                     <Card className="w-[80%]">
                         <CardHeader>
                             <CardTitle>{title}</CardTitle>
-                            <CardDescription>Track your job applications with detailed information about the role and company.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {children}
