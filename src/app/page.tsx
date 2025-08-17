@@ -4,20 +4,25 @@ import { Button } from "@/components/ui/button";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
 import { useJobApplications } from "@/lib/job-applications";
-import { cn } from "@/lib/utils";
 import { CirclePlus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import JobApplicationCard from "./components/ui/job-application-card/job-application-card";
+import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ApplicationStatus } from "@/types/enums";
-import App from "next/app";
+import JobApplicationGrid from "./components/ui/job-application-grid/job-application-grid";
+import JobApplicationTable from "./components/ui/job-application-table/job-application-table";
+
+enum View {
+  GRID = "grid",
+  TABLE = "table"
+}
 
 export default function Home() {
   const router = useRouter();
   const user = useUser();
+  const [view, setView] = useState<View>(View.GRID);
 
-  const jobApplications = useJobApplications();
+  const jobApplicationsData = useJobApplications();
 
 
   useEffect(() => {
@@ -27,12 +32,12 @@ export default function Home() {
   }, [user.data, router])
 
   useEffect(() => {
-    console.log(jobApplications);
-  }, [jobApplications.data])
+    console.log(jobApplicationsData);
+  }, [jobApplicationsData.data])
 
   return (
-    <div className="w-full h-full flex flex-col items-center p-10 gap-5">
-      <div className="flex flex-col justify-center items-center gap-5">
+    <div className="min-w-full h-full flex flex-col items-center p-10 gap-5">
+      <div className="flex flex-col justify-center items-center gap-5 w-full">
         <div className="flex w-full justify-between">
           <div>
             <Tabs defaultValue="overview" className="w-[400px]">
@@ -50,8 +55,8 @@ export default function Home() {
           <div className="flex gap-5">
             <Tabs defaultValue="grid">
               <TabsList>
-                <TabsTrigger value="grid">Grid View</TabsTrigger>
-                <TabsTrigger value="table">Table View</TabsTrigger>
+                <TabsTrigger value="grid" onClick={() => setView(View.GRID)}>Grid View</TabsTrigger>
+                <TabsTrigger value="table" onClick={() => setView(View.TABLE)}>Table View</TabsTrigger>
               </TabsList>
             </Tabs>
             <Button size="lg" onClick={() => { router.replace(decodeURIComponent(paths.home.applications.new.getHref())) }}>
@@ -60,17 +65,8 @@ export default function Home() {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          {jobApplications.isLoading ? (
-            <div>Loading...</div>
-          ) : jobApplications.data?.length ? (
-            <div className="grid grid-cols-3 gap-5">
-              {jobApplications.data.map((job, i) => (
-                <JobApplicationCard key={i} jobData={job} />
-              ))}
-            </div>
-          ) : (
-            <h2 className="text-3xl font-semibold">No jobs yet</h2>
-          )}
+          {view === View.GRID && jobApplicationsData.data && <JobApplicationGrid data={jobApplicationsData.data} />}
+          {view === View.TABLE && jobApplicationsData.data && <JobApplicationTable data={jobApplicationsData.data} />}
         </div>
 
       </div>
