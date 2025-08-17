@@ -1,6 +1,6 @@
-import { JobApplicationsResponse } from "@/types/api";
+import { JobApplication, JobApplicationsResponse } from "@/types/api";
 import { api } from "./api-client";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getJobApplications = async () => {
     try {
@@ -23,3 +23,19 @@ export const getJobApplicationsQueryOptions = () => {
 
 export const useJobApplications = () => useQuery(getJobApplicationsQueryOptions());
 
+const createJobApplication = (jobApplication: Omit<JobApplication, "userId">): Promise<JobApplication> => {
+    return api.post("/job-applications", jobApplication);
+}
+
+const createJobQueryKey = ["createJob"];
+
+export const useCreateJobApplication = ({ onSuccess }: { onSuccess?: () => void }) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: createJobApplication,
+        onSuccess: (data: Omit<JobApplication, "userId">) => {
+            queryClient.setQueryData(createJobQueryKey, data);
+            onSuccess?.();
+        }
+    })
+}

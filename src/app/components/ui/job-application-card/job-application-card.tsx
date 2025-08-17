@@ -93,7 +93,7 @@ export default function JobApplicationCard({ jobData, onEdit, onSave }: JobAppli
     const currentData = isEditing ? editableData : jobData
 
     return (
-        <Card className="w-full max-w-2xl">
+        <Card className="w-full min-w-sm max-w-2xl">
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div className="flex-1 mr-4">
@@ -202,7 +202,7 @@ export default function JobApplicationCard({ jobData, onEdit, onSave }: JobAppli
                             </div>
                         ) : (
                             <span className="text-sm">
-                                {currentData.location.city}, {currentData.location.state}, {currentData.location.country}
+                                {currentData.location.city}, {currentData.location.state}<br />{currentData.location.country}
                             </span>
                         )}
                     </div>
@@ -306,12 +306,12 @@ export default function JobApplicationCard({ jobData, onEdit, onSave }: JobAppli
                     {isEditing ? (
                         <Input
                             type="date"
-                            value={currentData.appliedOn}
+                            value={currentData.appliedOn.toString()}
                             onChange={(e) => updateField("appliedOn", e.target.value)}
                             className="w-40 h-6 text-xs border-dashed"
                         />
                     ) : (
-                        <span className="text-sm text-muted-foreground">Applied on {formatDate(currentData.appliedOn)}</span>
+                        <span className="text-sm text-muted-foreground">Applied on {formatDate(currentData.appliedOn.toString())}</span>
                     )}
                 </div>
 

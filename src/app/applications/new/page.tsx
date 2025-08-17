@@ -27,9 +27,9 @@ import states from "states-us";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api-client";
 import { ApplicationStatus, CompensationType, EmploymentType, WorkArrangement } from "@/types/enums";
-import { useEffect } from "react";
-import path from "path";
 import { paths } from "@/config/paths";
+import { useCreateJobApplication } from "@/lib/job-applications";
+import { Spinner } from "@/app/components/ui/spinner";
 
 const newApplicationFormSchema = z.object({
     companyName: z.string().min(1, {
@@ -44,7 +44,7 @@ const newApplicationFormSchema = z.object({
         city: z.string().min(1, { error: "City must not be empty" }),
         state: z.string().optional(),
         country: z.string().min(1, { error: "Select a country" })
-    }).optional(),
+    }),
     employmentType: z.enum(EmploymentType, { error: "Select an employment type" }),
     workArrangement: z.enum(WorkArrangement, { error: "Select a work arrangement" }),
     compensation: z.object({
@@ -89,12 +89,15 @@ export default function NewApplication({ }: Props) {
             referral: false,
             applicationStatus: undefined
         }
+    });
+
+    const createJobApplication = useCreateJobApplication({
+        onSuccess: () => router.push(paths.home.getHref())
     })
 
     async function onSubmit(values: z.infer<typeof newApplicationFormSchema>) {
         console.log(values);
-        const response = await api.post("/job-applications", values);
-        console.log(response);
+        createJobApplication.mutate(values);
     }
 
     function onError(errors: FieldErrors<z.infer<typeof newApplicationFormSchema>>) {
@@ -389,8 +392,8 @@ export default function NewApplication({ }: Props) {
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="default" type="submit" size="xl">Save</Button>
-                    <Button variant="secondary" onClick={handleCancel} size="xl">Cancel</Button>
+                    <Button variant="default" type="submit" size="xl" disabled={createJobApplication.isPending}>{createJobApplication.isPending ? <Spinner /> : "Save"}</Button>
+                    <Button variant="secondary" onClick={handleCancel} disabled={createJobApplication.isPending} size="xl">Cancel</Button>
                 </div>
             </form >
         </Form >

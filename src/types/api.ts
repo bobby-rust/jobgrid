@@ -32,7 +32,7 @@ export type AuthResponse = {
 
 export type Location = {
   city: string,
-  state: string,
+  state?: string,
   country: string
 }
 
@@ -50,7 +50,7 @@ export type JobApplication = {
   employmentType: EmploymentType,
   workArrangement: WorkArrangement ,
   compensation: Compensation ,
-  appliedOn: string,
+  appliedOn: Date,
   notes: string,
   referral: boolean,
   applicationStatus: ApplicationStatus

@@ -29,17 +29,25 @@ export default function Home() {
 
   return (
     <div className="w-full h-full flex flex-col items-center p-10 gap-5">
-      <h1 className="text-center text-6xl font-extrabold tracking-tight text-balance">Welcome to Griddle, {user.data && user.data.email.split("@")[0]}</h1>
       <div className="flex flex-col justify-center items-center gap-5">
-
-        <Button size="xl" onClick={() => { router.replace(decodeURIComponent(paths.home.applications.new.getHref())) }}>
-          <CirclePlus className="size-6" /> Track New Application
-        </Button>
-        <div>
+        <div className="flex w-full justify-between">
+          <div>
+            <ul className="flex gap-5">
+              <li>Overview</li>
+              <li>Rejections</li>
+              <li>Offers</li>
+              <li>Interviews</li>
+            </ul>
+          </div>
+          <Button size="lg" onClick={() => { router.replace(decodeURIComponent(paths.home.applications.new.getHref())) }}>
+            <CirclePlus className="size-6" /> <span className="-translate-y-[1px]">New Application</span>
+          </Button>
+        </div>
+        <div className="flex justify-center items-center">
           {jobApplications.isLoading ? (
             <div>Loading...</div>
           ) : jobApplications.data?.length ? (
-            <div>
+            <div className="grid grid-cols-3 gap-5">
               {jobApplications.data.map((job, i) => (
                 <JobApplicationCard key={i} jobData={job} />
               ))}
