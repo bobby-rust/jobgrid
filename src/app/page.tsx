@@ -40,7 +40,6 @@ export default function Home() {
             <div>Loading...</div>
           ) : jobApplications.data?.length ? (
             <div>
-              {/* Render your jobs here */}
               {jobApplications.data.map((job, i) => (
                 <JobApplicationCard key={i} jobData={job} />
               ))}

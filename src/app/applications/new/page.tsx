@@ -27,6 +27,9 @@ import states from "states-us";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/lib/api-client";
 import { ApplicationStatus, CompensationType, EmploymentType, WorkArrangement } from "@/types/enums";
+import { useEffect } from "react";
+import path from "path";
+import { paths } from "@/config/paths";
 
 const newApplicationFormSchema = z.object({
     companyName: z.string().min(1, {
@@ -97,6 +100,11 @@ export default function NewApplication({ }: Props) {
     function onError(errors: FieldErrors<z.infer<typeof newApplicationFormSchema>>) {
         console.error(errors);
         toast("Please fix the errors before submitting the form!");
+    }
+
+    function handleCancel(e: React.FormEvent) {
+        e.preventDefault();
+        router.push(paths.home.getHref());
     }
 
     const country = form.watch("location.country");
@@ -380,7 +388,10 @@ export default function NewApplication({ }: Props) {
                         </div>
                     </div>
                 </div>
-                <Button variant="default" type="submit">Submit</Button>
+                <div className="flex gap-2">
+                    <Button variant="default" type="submit" size="xl">Save</Button>
+                    <Button variant="secondary" onClick={handleCancel} size="xl">Cancel</Button>
+                </div>
             </form >
         </Form >
     );
